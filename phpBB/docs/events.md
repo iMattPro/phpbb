@@ -1718,6 +1718,20 @@ overall_footer_page_body_after
 * Since: 3.1.0-b3
 * Purpose: Add content after the page-body, but before the footer
 
+overall_footer_right_side_append
+===
+* Locations:
+    + styles/prosilver/template/navbar_footer.html
+* Since: 4.0.0-a3
+* Purpose: Append contents after the right side navbar/menu links
+
+overall_footer_right_side_prepend
+===
+* Locations:
+    + styles/prosilver/template/navbar_footer.html
+* Since: 4.0.0-a3
+* Purpose: Prepend contents before the right side navbar/menu links
+
 overall_footer_teamlink_after
 ===
 * Locations:
