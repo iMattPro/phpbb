@@ -22,15 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class phpbb_migrator_revert_data_merge_test extends phpbb_test_case
 {
-	/** @var helper */
-	protected $helper;
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->helper = new helper();
-	}
-
 	/**
 	 * Data provider for test_revert_steps_merge.
 	 *
@@ -88,7 +79,7 @@ class phpbb_migrator_revert_data_merge_test extends phpbb_test_case
 	/**
 	 * @dataProvider revert_steps_provider
 	 */
-	public function test_try_revert_merges_steps_no_duplicates(array $update_data, array $revert_data, array $expected): void
+	public function test_revert_steps_merge(array $update_data, array $revert_data, array $expected): void
 	{
 		$db = $this->createMock(driver_interface::class);
 		$db_tools = $this->createMock(tools_interface::class);
