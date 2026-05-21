@@ -30,8 +30,7 @@ cd phpBB
 php ../composer.phar install --dev --no-interaction
 if [[ "$PHP_VERSION" =~ ^nightly$ || "$PHP_VERSION" =~ ^8 ]]
 then
-	php ../composer.phar config --global audit.block-insecure false \
-	&& php ../composer.phar remove phpunit/dbunit --dev --update-with-dependencies \
-	&& php ../composer.phar require symfony/yaml:^4.4 misantron/dbunit:5.2.1 phpunit/phpunit:^9.3 doctrine/instantiator:^1.4 --dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
+	php ../composer.phar remove phpunit/dbunit --dev --update-with-dependencies \
+	&& php ../composer.phar require symfony/yaml:^4.4 misantron/dbunit:5.2.1 phpunit/phpunit:^9.3 doctrine/instantiator:^1.4 --dev --update-with-all-dependencies --ignore-platform-reqs --no-security-blocking
 fi
 cd ..

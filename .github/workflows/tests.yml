@@ -591,9 +591,8 @@ jobs:
                   cd ${env:GITHUB_WORKSPACE}\phpBB
                   php ..\composer.phar install
                   if ("${{ matrix.php }}" -match "^8") {
-                      php ..\composer.phar config --global audit.block-insecure false
-                      php ..\composer.phar remove phpunit/dbunit --dev --update-with-dependencies
-                      php ..\composer.phar require symfony/yaml:^4.4 misantron/dbunit:5.2.1 phpunit/phpunit:^9.3 doctrine/instantiator:^1.4 --dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
+                      php ..\composer.phar remove phpunit/dbunit --dev --update-with-dependencies --no-security-blocking
+                      php ..\composer.phar require symfony/yaml:^4.4 misantron/dbunit:5.2.1 phpunit/phpunit:^9.3 doctrine/instantiator:^1.4 --dev --update-with-all-dependencies --ignore-platform-reqs --no-security-blocking
                   }
                   cd ..
             - name: Setup database
