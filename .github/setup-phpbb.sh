@@ -30,8 +30,7 @@ cd phpBB
 php ../composer.phar install --dev --no-interaction
 if [[ "$PHP_VERSION" =~ ^nightly$ || "$PHP_VERSION" =~ ^8 ]]
 then
-	php ../composer.phar remove phpunit/dbunit --dev --update-with-dependencies \
-	&& php ../composer.phar remove symfony/debug --update-with-dependencies \
+	php ../composer.phar remove phpunit/dbunit fabpot/goutte --dev --update-with-dependencies \
 	&& php ../composer.phar require \
 		symfony/config:^5.4 \
 		symfony/console:^5.4 \
@@ -49,9 +48,10 @@ then
 		symfony/browser-kit:^5.4 \
 		symfony/css-selector:^5.4 \
 		symfony/dom-crawler:^5.4 \
-		misantron/dbunit:^5.2 \
+		twig/twig:^3.0 \
+		misantron/dbunit:^5.4 \
 		phpunit/phpunit:^9.5 \
 		doctrine/instantiator:^1.4 \
-		--dev --update-with-all-dependencies --ignore-platform-reqs
+		--dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
 fi
 cd ..

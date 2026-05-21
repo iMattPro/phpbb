@@ -591,8 +591,7 @@ jobs:
                   cd ${env:GITHUB_WORKSPACE}\phpBB
                   php ..\composer.phar install
                   if ("${{ matrix.php }}" -match "^8") {
-                      php ..\composer.phar remove phpunit/dbunit --dev --update-with-dependencies
-                      php ..\composer.phar remove symfony/debug --update-with-dependencies
+                      php ..\composer.phar remove phpunit/dbunit fabpot/goutte --dev --update-with-dependencies
                       php ..\composer.phar require `
                           symfony/config:^5.4 `
                           symfony/console:^5.4 `
@@ -610,10 +609,11 @@ jobs:
                           symfony/browser-kit:^5.4 `
                           symfony/css-selector:^5.4 `
                           symfony/dom-crawler:^5.4 `
-                          misantron/dbunit:^5.2 `
+                          twig/twig:^3.0 `
+                          misantron/dbunit:^5.4 `
                           phpunit/phpunit:^9.5 `
                           doctrine/instantiator:^1.4 `
-                          --dev --update-with-all-dependencies --ignore-platform-reqs
+                          --dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
                   }
                   cd ..
             - name: Setup database
