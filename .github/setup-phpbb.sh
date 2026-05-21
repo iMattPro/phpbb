@@ -30,28 +30,8 @@ cd phpBB
 php ../composer.phar install --dev --no-interaction
 if [[ "$PHP_VERSION" =~ ^nightly$ || "$PHP_VERSION" =~ ^8 ]]
 then
-	php ../composer.phar remove phpunit/dbunit fabpot/goutte --dev --update-with-dependencies \
-	&& php ../composer.phar require \
-		symfony/config:^5.4 \
-		symfony/console:^5.4 \
-		symfony/dependency-injection:^5.4 \
-		symfony/event-dispatcher:^5.4 \
-		symfony/filesystem:^5.4 \
-		symfony/finder:^5.4 \
-		symfony/http-foundation:^5.4 \
-		symfony/http-kernel:^5.4 \
-		symfony/process:^5.4 \
-		symfony/proxy-manager-bridge:^5.4 \
-		symfony/routing:^5.4 \
-		symfony/twig-bridge:^5.4 \
-		symfony/yaml:^5.4 \
-		symfony/browser-kit:^5.4 \
-		symfony/css-selector:^5.4 \
-		symfony/dom-crawler:^5.4 \
-		twig/twig:^3.0 \
-		misantron/dbunit:^5.4 \
-		phpunit/phpunit:^9.5 \
-		doctrine/instantiator:^1.4 \
-		--dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
+	php ../composer.phar config --global audit.block-insecure false \
+	&& php ../composer.phar remove phpunit/dbunit --dev --update-with-dependencies \
+	&& php ../composer.phar require symfony/yaml:^4.4 misantron/dbunit:5.2.1 phpunit/phpunit:^9.3 doctrine/instantiator:^1.4 --dev --update-with-all-dependencies --ignore-platform-reqs --no-audit
 fi
 cd ..
