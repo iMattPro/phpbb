@@ -52,11 +52,6 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 		];
 
 		return [
-			// ------------------------------------------------------------------
-			// Existing cases – a fourth element (db_rows) is now required.
-			// All of these are resolved before the sitelist is consulted, so
-			// db_rows is always [].
-			// ------------------------------------------------------------------
 			'secure_disabled' => [
 				array_merge($base_config, ['secure_downloads' => 0]),
 				'https://other_domain.com/',
@@ -192,7 +187,7 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				'example.com',
 				[],
 				true,
-				'denylist mode (secure_allow_deny=0) bypasses the sitelist and must return true',
+				'denylist mode with no matching sitelist entries must return true (default allow)',
 			],
 			'sitelist_hostname_in_allowlist' => [
 				$base_config,
@@ -202,6 +197,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				true,
 				'allowlist: hostname match with ip_exclude=0 must return true',
 			],
+			'sitelist_hostname_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://untrusted-site.com/',
+				'example.com',
+				[['site_ip' => '', 'site_hostname' => 'untrusted-site.com', 'ip_exclude' => 0]],
+				false,
+				'denylist: hostname match with ip_exclude=0 must return false',
+			],
 			'sitelist_hostname_not_in_allowlist' => [
 				$base_config,
 				'https://unknown-site.com/',
@@ -209,6 +212,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				[['site_ip' => '', 'site_hostname' => 'trusted-site.com', 'ip_exclude' => 0]],
 				false,
 				'allowlist: non-matching hostname must return false',
+			],
+			'sitelist_hostname_not_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://unknown-site.com/',
+				'example.com',
+				[['site_ip' => '', 'site_hostname' => 'trusted-site.com', 'ip_exclude' => 0]],
+				true,
+				'denylist: non-matching hostname must return true',
 			],
 			'sitelist_hostname_excluded_from_allowlist' => [
 				$base_config,
@@ -218,6 +229,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				false,
 				'allowlist: hostname match with ip_exclude=1 must return false and stop processing',
 			],
+			'sitelist_hostname_excluded_from_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://excluded-site.com/',
+				'example.com',
+				[['site_ip' => '', 'site_hostname' => 'excluded-site.com', 'ip_exclude' => 1]],
+				true,
+				'denylist: hostname match with ip_exclude=1 must return true and stop processing',
+			],
 			'sitelist_hostname_wildcard_in_allowlist' => [
 				$base_config,
 				'https://sub.trusted-domain.com/',
@@ -226,6 +245,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				true,
 				'allowlist: wildcard hostname pattern must match subdomains',
 			],
+			'sitelist_hostname_wildcard_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://sub.trusted-domain.com/',
+				'example.com',
+				[['site_ip' => '', 'site_hostname' => '*.trusted-domain.com', 'ip_exclude' => 0]],
+				false,
+				'denylist: wildcard hostname pattern must match subdomains and deny',
+			],
 			'sitelist_hostname_wildcard_no_match' => [
 				$base_config,
 				'https://other-domain.com/',
@@ -233,6 +260,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				[['site_ip' => '', 'site_hostname' => '*.trusted-domain.com', 'ip_exclude' => 0]],
 				false,
 				'allowlist: wildcard hostname pattern must not match an unrelated domain',
+			],
+			'sitelist_hostname_wildcard_deny_no_match' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://other-domain.com/',
+				'example.com',
+				[['site_ip' => '', 'site_hostname' => '*.trusted-domain.com', 'ip_exclude' => 0]],
+				true,
+				'denylist: wildcard hostname pattern must not match an unrelated domain',
 			],
 			'sitelist_hostname_allowed_then_excluded' => [
 				$base_config,
@@ -245,6 +280,17 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				false,
 				'allowlist: a hostname allowed by one row must be denied when a subsequent row excludes it',
 			],
+			'sitelist_hostname_denied_then_excluded' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://overridden-site.com/',
+				'example.com',
+				[
+					['site_ip' => '', 'site_hostname' => 'overridden-site.com', 'ip_exclude' => 0],
+					['site_ip' => '', 'site_hostname' => 'overridden-site.com', 'ip_exclude' => 1],
+				],
+				true,
+				'denylist: a hostname denied by one row must be allowed when a subsequent row excludes it',
+			],
 			'sitelist_ip_in_allowlist' => [
 				$base_config,
 				'https://localhost/',
@@ -252,6 +298,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				[['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 0]],
 				true,
 				'allowlist: exact IP match with ip_exclude=0 must return true',
+			],
+			'sitelist_ip_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://localhost/',
+				'example.com',
+				[['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 0]],
+				false,
+				'denylist: exact IP match with ip_exclude=0 must return false',
 			],
 			'sitelist_ip_not_in_allowlist' => [
 				$base_config,
@@ -261,6 +315,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				false,
 				'allowlist: non-matching IP must return false',
 			],
+			'sitelist_ip_not_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://localhost/',
+				'example.com',
+				[['site_ip' => '10.0.0.1', 'site_hostname' => '', 'ip_exclude' => 0]],
+				true,
+				'denylist: non-matching IP must return true',
+			],
 			'sitelist_ip_excluded_from_allowlist' => [
 				$base_config,
 				'https://localhost/',
@@ -268,6 +330,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				[['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 1]],
 				false,
 				'allowlist: IP match with ip_exclude=1 must return false (break 2)',
+			],
+			'sitelist_ip_excluded_from_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://localhost/',
+				'example.com',
+				[['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 1]],
+				true,
+				'denylist: IP match with ip_exclude=1 must return true (break 2)',
 			],
 			'sitelist_ip_wildcard_in_allowlist' => [
 				$base_config,
@@ -277,7 +347,14 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				true,
 				'allowlist: wildcard IP pattern must match localhost address',
 			],
-			// Multi-row: a later IP exclude row must override an earlier IP allow row.
+			'sitelist_ip_wildcard_in_denylist' => [
+				array_merge($base_config, ['secure_allow_deny' => 0]),
+				'https://localhost/',
+				'example.com',
+				[['site_ip' => '127.0.*', 'site_hostname' => '', 'ip_exclude' => 0]],
+				false,
+				'denylist: wildcard IP pattern must match localhost address',
+			],
 			'sitelist_ip_allowed_then_excluded' => [
 				$base_config,
 				'https://localhost/',
@@ -288,6 +365,17 @@ class phpbb_download_download_allowed_test extends phpbb_test_case
 				],
 				false,
 				'allowlist: an IP allowed by one row must be denied when a subsequent row excludes it (break 2)',
+			],
+			'sitelist_ip_denied_then_excluded' => [
+				$base_config,
+				'https://localhost/',
+				'example.com',
+				[
+					['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 0],
+					['site_ip' => '127.0.0.1', 'site_hostname' => '', 'ip_exclude' => 1],
+				],
+				false,
+				'denylist: an IP denied by one row must be allowed when a subsequent row excludes it (break 2)',
 			],
 		];
 	}
