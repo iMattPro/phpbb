@@ -2,7 +2,7 @@
 
 <project name="phpBB" description="The phpBB forum software" default="all" basedir="../">
 	<!-- a few settings for the build -->
-	<property name="newversion" value="4.0.0-a3" />
+	<property name="newversion" value="4.0.0-a3-dev" />
 	<property name="prevversion" value="4.0.0-a2" />
 	<property name="olderversions" value="3.1.12, 3.2.11, 3.3.16, 3.3.17" />
 	<!-- no configuration should be needed beyond this point -->
