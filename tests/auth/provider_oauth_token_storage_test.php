@@ -292,13 +292,14 @@ class phpbb_auth_provider_oauth_token_storage_test extends phpbb_database_test_c
 
 		$this->token_storage->clearAuthorizationState($this->service_name);
 		$this->assertFalse($this->token_storage->hasAuthorizationState($this->service_name));
-		$this->assertEmpty($this->token_storage->retrieveAuthorizationState($this->service_name));
+		$this->expectException(\OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException::class);
+		$this->token_storage->retrieveAuthorizationState($this->service_name);
 	}
 
 	public function test_retrieve_not_stored_state()
 	{
+		$this->expectException(\OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException::class);
 		$result = $this->token_storage->retrieveAuthorizationState($this->service_name);
-		$this->assertEmpty($result);
 	}
 
 	public function test_validate_authorization_state_invalid()
