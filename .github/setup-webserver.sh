@@ -52,6 +52,7 @@ echo "
 	listen.mode = 0666
 	pm = static
 	pm.max_children = 2
+	request_terminate_timeout = 60s
 
 	php_admin_value[memory_limit] = 128M
 " > $PHP_FPM_CONF
