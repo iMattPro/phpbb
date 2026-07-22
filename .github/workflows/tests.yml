@@ -242,12 +242,19 @@ jobs:
               if: ${{ matrix.SLOWTESTS != 1 && steps.database-type.outputs.db == 'mysql' }}
               run: phpBB/vendor/bin/phpunit tests/lint_test.php
 
+            - name: Run functional tests
+              env:
+                  DB: ${{steps.database-type.outputs.db}}
+              if: ${{ matrix.SLOWTESTS != 1 && matrix.NOTESTS != 1 }}
+              run: |
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+
             - name: Run unit tests
               env:
                   DB: ${{steps.database-type.outputs.db}}
               if: ${{ matrix.SLOWTESTS != 1 && matrix.NOTESTS != 1 }}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Test Suite' --display-all-issues --stop-on-error
 
             - name: Slow tests
               env:
@@ -373,11 +380,17 @@ jobs:
             - name: Setup node dependencies
               run: npm ci
 
+            - name: Run functional tests
+              env:
+                  DB: ${{steps.database-type.outputs.db}}
+              run: |
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+
             - name: Run unit tests
               env:
                   DB: ${{steps.database-type.outputs.db}}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Test Suite' --display-all-issues --stop-on-error
 
     # Other database types, namely sqlite3 and mssql
     other-tests:
@@ -487,11 +500,17 @@ jobs:
             - name: Setup node dependencies
               run: npm ci
 
+            - name: Run functional tests
+              env:
+                  DB: ${{steps.database-type.outputs.db}}
+              run: |
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+
             - name: Run unit tests
               env:
                   DB: ${{steps.database-type.outputs.db}}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Test Suite' --display-all-issues --stop-on-error
 
     # Test with PostgreSQL on Windows
     windows-tests:
