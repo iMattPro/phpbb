@@ -760,6 +760,8 @@ class installer
 	 * Sort packages the same way as a prefer-stable Composer update.
 	 *
 	 * @param PackageInterface[] $package_versions Package versions to sort in place
+	 *
+	 * @return void
 	 */
 	private function sort_package_versions(array &$package_versions): void
 	{

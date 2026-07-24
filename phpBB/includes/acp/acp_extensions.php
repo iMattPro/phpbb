@@ -25,6 +25,11 @@ if (!defined('IN_PHPBB'))
 
 class acp_extensions
 {
+	/**
+	 * Default Composer repositories installed by phpBB.
+	 *
+	 * @var string[]
+	 */
 	private const DEFAULT_COMPOSER_REPOSITORIES = [
 		'https://satis.phpbb.com/',
 		'https://www.phpbb.com/customise/db/composer/40/',
@@ -830,6 +835,10 @@ class acp_extensions
 
 	/**
 	 * Validate a Composer package name before passing it to Composer.
+	 *
+	 * @param string $package Composer package name
+	 *
+	 * @return bool Whether the package name is valid
 	 */
 	private function is_valid_composer_package_name(string $package): bool
 	{
@@ -838,6 +847,15 @@ class acp_extensions
 
 	/**
 	 * Ensure ACP actions can only target packages exposed by the catalog or already managed by phpBB.
+	 *
+	 * @param string                              $action             Composer action
+	 * @param string                              $extension          Composer package name
+	 * @param \phpbb\composer\manager_interface   $composer_manager   Composer extension manager
+	 * @param \phpbb\extension\manager             $extensions_manager phpBB extension manager
+	 * @param \phpbb\language\language             $language           Language service
+	 * @param string                               $origin             Trusted action origin
+	 *
+	 * @return void
 	 */
 	private function validate_composer_action($action, $extension, \phpbb\composer\manager_interface $composer_manager, \phpbb\extension\manager $extensions_manager, \phpbb\language\language $language, string $origin)
 	{
@@ -867,6 +885,8 @@ class acp_extensions
 
 	/**
 	 * Return the trusted page from which a Composer action originated.
+	 *
+	 * @return string Trusted action origin
 	 */
 	private function get_composer_action_origin(): string
 	{
@@ -877,6 +897,10 @@ class acp_extensions
 
 	/**
 	 * Return the ACP URL matching a trusted Composer action origin.
+	 *
+	 * @param string $origin Trusted action origin
+	 *
+	 * @return string ACP return URL
 	 */
 	private function get_composer_return_url(string $origin): string
 	{
@@ -885,6 +909,10 @@ class acp_extensions
 
 	/**
 	 * Build explicit links to both extension management pages, with the origin first.
+	 *
+	 * @param string $origin Trusted action origin
+	 *
+	 * @return string HTML links to the extension management pages
 	 */
 	private function get_composer_back_links(string $origin): string
 	{
@@ -898,7 +926,7 @@ class acp_extensions
 			$links = array_reverse($links, true);
 		}
 
-		return '<br /><br />' . implode('<br />', $links);
+		return '<br><br>' . implode('<br>', $links);
 	}
 
 	/**

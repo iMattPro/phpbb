@@ -427,6 +427,8 @@ class manager implements manager_interface
 
 	/**
 	 * Clear request-local installed package state after Composer changes it.
+	 *
+	 * @return void
 	 */
 	private function invalidate_installed_packages(): void
 	{
