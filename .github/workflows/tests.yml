@@ -2,12 +2,12 @@ name: Tests
 
 on:
     push:
-        branches:
-            - 3.3.x
-            - master
-            - 'prep-release-*'
-        tags:
-            - 'release-*'
+#        branches:
+#            - 3.3.x
+#            - master
+#            - 'prep-release-*'
+#        tags:
+#            - 'release-*'
     pull_request:
         branches:
             - 3.3.x
@@ -247,7 +247,7 @@ jobs:
                   DB: ${{steps.database-type.outputs.db}}
               if: ${{ matrix.SLOWTESTS != 1 && matrix.NOTESTS != 1 }}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error --teamcity
 
             - name: Run unit tests
               env:
@@ -384,7 +384,7 @@ jobs:
               env:
                   DB: ${{steps.database-type.outputs.db}}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error --teamcity
 
             - name: Run unit tests
               env:
@@ -504,7 +504,7 @@ jobs:
               env:
                   DB: ${{steps.database-type.outputs.db}}
               run: |
-                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error
+                  phpBB/vendor/bin/phpunit --configuration .github/phpunit-$DB-github.xml --testsuite 'phpBB Functional Tests' --display-all-issues --stop-on-error --teamcity
 
             - name: Run unit tests
               env:
